@@ -316,6 +316,7 @@ public class Cliente extends JFrame implements ActionListener, Runnable{
                     Thread.sleep(5000);
                     opcion=5;
                     Cliente.Movimiento=5;
+                    System.exit(0);
                 }
                     Thread.sleep(1000);
                     tableroRemoto.cambiarJuego();
