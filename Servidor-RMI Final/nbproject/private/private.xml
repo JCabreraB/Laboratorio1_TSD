@@ -3,14 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/xEerruck/Desktop/TSD_LAbRMI%20Final/Servidor-RMI%20Final/src/rmi_interface/Tablero.java</file>
-            <file>file:/C:/Users/xEerruck/Desktop/TSD_LAbRMI%20Final/Servidor-RMI%20Final/src/rmi/ServidorRMI.java</file>
-            <file>file:/C:/Users/xEerruck/Desktop/TSD_LAbRMI%20Final/Servidor-RMI%20Final/src/rmi_interface/Chat.java</file>
-            <file>file:/C:/Users/xEerruck/Desktop/TSD_LAbRMI%20Final/Servidor-RMI%20Final/src/rmi_interface/Usuario.java</file>
-            <file>file:/C:/Users/xEerruck/Desktop/TSD_LAbRMI%20Final/Servidor-RMI%20Final/src/rmi/ImplementacionTablero.java</file>
-            <file>file:/C:/Users/xEerruck/Desktop/TSD_LAbRMI%20Final/Servidor-RMI%20Final/src/rmi/ImplementacionUsuario.java</file>
-            <file>file:/C:/Users/xEerruck/Desktop/TSD_LAbRMI%20Final/Servidor-RMI%20Final/src/rmi/ImplementacionChat.java</file>
-            <file>file:/C:/Users/xEerruck/Desktop/TSD_LAbRMI%20Final/Servidor-RMI%20Final/src/servidor/Servidor.java</file>
+            <file>file:/C:/Users/xEerruck/Documents/GitHub/Laboratorio1_TSD/Servidor-RMI%20Final/src/rmi/ImplementacionTablero.java</file>
+            <file>file:/C:/Users/xEerruck/Documents/GitHub/Laboratorio1_TSD/Servidor-RMI%20Final/src/rmi_interface/Usuario.java</file>
+            <file>file:/C:/Users/xEerruck/Documents/GitHub/Laboratorio1_TSD/Servidor-RMI%20Final/src/rmi_interface/Tablero.java</file>
+            <file>file:/C:/Users/xEerruck/Documents/GitHub/Laboratorio1_TSD/Servidor-RMI%20Final/src/rmi/ImplementacionUsuario.java</file>
         </group>
     </open-files>
 </project-private>

@@ -229,7 +229,8 @@ public class Cliente extends JFrame implements ActionListener, Runnable{
                 chatRemoto = conexion.getChatServidor();
                 int opcion=0;
                 
-                tableroRemoto.PonerTrampas();
+                
+                
 
                 
                 while (opcion != 5) {
@@ -268,6 +269,8 @@ public class Cliente extends JFrame implements ActionListener, Runnable{
                     
                     
                     while(CantidadUsuarios!=CantidadListos){
+                        
+                        
                         if(Cliente.validadorUsuario == 1)
                        {   
                            
@@ -293,6 +296,7 @@ public class Cliente extends JFrame implements ActionListener, Runnable{
                            Cliente.confChat = false;
                        }
                         
+                        
                         CantidadUsuarios=usuarioRemoto.verUsuarios().size();
                         CantidadListos=usuarioRemoto.getListos().size();
                         
@@ -304,6 +308,20 @@ public class Cliente extends JFrame implements ActionListener, Runnable{
                         }
                         
                     }
+                    
+                    //tableroRemoto.cambiarJuego();
+                    
+                    if(tableroRemoto.EnJuego()){
+                    Cliente.Estado.setText("La Sala ha sido Ocupada. Intente mas Tarde");
+                    Thread.sleep(5000);
+                    opcion=5;
+                    Cliente.Movimiento=5;
+                }
+                    Thread.sleep(1000);
+                    tableroRemoto.cambiarJuego();
+                    
+                    tableroRemoto.PonerTrampas(); 
+                    Cliente.mostrar(tableroRemoto.getMatriz(),myTurno);
                     
                  
                     while(Cliente.Movimiento!=5){

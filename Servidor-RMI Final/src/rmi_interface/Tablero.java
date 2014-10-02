@@ -25,4 +25,6 @@ public interface Tablero extends Remote {
     public boolean verEstado() throws RemoteException;
     public int Puntaje() throws RemoteException;
     public int MensajeJuego() throws RemoteException;
+    public void cambiarJuego () throws RemoteException;
+    public boolean EnJuego () throws RemoteException;
 }

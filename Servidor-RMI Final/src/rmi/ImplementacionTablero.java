@@ -20,7 +20,7 @@ public class ImplementacionTablero extends UnicastRemoteObject implements Tabler
     static int MatrizTablero[][] = new int [10][10];
     static int PosX;
     static int PosY;
-    static boolean Semovio, Termino = false;
+    static boolean Semovio, Termino, jugando = false;
     static int Puntaje;
     static int Mensaje;
     
@@ -233,5 +233,15 @@ public class ImplementacionTablero extends UnicastRemoteObject implements Tabler
     @Override
     public void cambiarCondicion () throws RemoteException{    
     ImplementacionTablero.Semovio=false;
+    }
+    
+    @Override
+    public void cambiarJuego () throws RemoteException{
+    ImplementacionTablero.jugando = true;
+    }
+    
+    @Override
+    public boolean EnJuego () throws RemoteException{
+    return ImplementacionTablero.jugando;
     }
 }
