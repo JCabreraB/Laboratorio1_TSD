@@ -10,8 +10,6 @@ import javax.swing.JTextArea;
 import rmi_interface.Tablero;
 import rmi_interface.Usuario;
 import rmi_interface.Chat;
-import rmi_interface.ActionRunable;
-
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -27,14 +25,13 @@ import rmi.ConexionCliente;
  * @title Taller de sistemas distribuidos - Clase 1
  */
 
-public class Cliente extends JFrame implements ActionListener, Runnable {
+public class Cliente extends JFrame implements ActionListener, Runnable{
 
     public static int Puerto = 2014;                                 //Número del puerto que está alojado el servidor
     public static String IPServer = "localhost";                      //Dirección IP del servidor, la cual podría utilizarse por defecto el localhost
     public static String usuarioRefRemoto = "UsuarioRemoto";    // Nombre del objeto subido
     public static String tableroRefRemota = "TableroRemoto";    // Nombre del objeto subido
     public static String chatRefRemota = "ChatRemoto";    // Nombre del objeto subido
-    public static String message;
     public static int Movimiento = 6;
     public static boolean Confirmar, Ready, confChat = false;
     public static JButton botonIzquierdo, botonDerecho, botonArriba, botonAbajo, botonTamTablero, botonReady, confirmarNombre;
@@ -84,13 +81,11 @@ public class Cliente extends JFrame implements ActionListener, Runnable {
         
         
         this.setTitle("Servidor BD1");
-        
-        thread = new Thread(new Cliente());
-        //Y hacemos partir a ésta
-        thread.start();
+        Thread t= new Thread(this);
+        t.start();
     }
     
-     //@Override
+    @Override
     public void actionPerformed(ActionEvent evt) {
         
     
@@ -108,11 +103,9 @@ public class Cliente extends JFrame implements ActionListener, Runnable {
         if( evt.getSource()==Cliente.botonReady )
             Cliente.Ready=true;
         if( evt.getSource()==Cliente.confirmarNombre )
-        {   
-            System.out.println("se apreto aceptar");
+        {     
             Cliente.esteUsuario = Cliente.Nombre.getText();
             Cliente.confChat = true;
-            
         }
     }
     
@@ -134,15 +127,11 @@ public class Cliente extends JFrame implements ActionListener, Runnable {
         panel.setVisible(true);
         
         
+        
         Usuario usuarioRemoto; //Se crea un nuevo objeto llamado objetoRemoto
         Tablero tableroRemoto;  //Se crea un nuevo objeto llamado tableroRemoto
         Chat chatRemoto;  //Se crea un nuevo objeto llamado chatRemoto
-        
-        //thread = new Thread((Runnable) new Cliente());
-        //Y hacemos partir a ésta
-        //thread.start();
-        
-        
+
         //Se instancia el objeto que conecta con el servidor
         ConexionCliente conexion = new ConexionCliente();
         try {
@@ -159,10 +148,7 @@ public class Cliente extends JFrame implements ActionListener, Runnable {
                 tableroRemoto.PonerTrampas();
 
                 
-                while (opcion != 5) {
-                    
-
-                        
+                while (opcion != 5) {                    
 
                         System.out.println("Ingrese el nombre del usuario: ");
                         Scanner sc = new Scanner(System.in);
@@ -200,7 +186,8 @@ public class Cliente extends JFrame implements ActionListener, Runnable {
                         CantidadListos=usuarioRemoto.getListos().size();
                         
                         //System.out.println("Cantidad de Usuarios: "+ CantidadUsuarios +" Cantidad de Listos: "+CantidadListos );
-                        System.out.println("Cantidad de Usuarios: "+ CantidadUsuarios +" Cantidad de Listos: "+CantidadListos );
+                        System.out.print("");
+                        
                         if(Ready==true && Cuenta!=1){
                         usuarioRemoto.registrarListos(Ready);
                         Cuenta=1;
@@ -208,19 +195,12 @@ public class Cliente extends JFrame implements ActionListener, Runnable {
                         
                     }
                     
-                    
-                    
-                    //thread = new Thread((Runnable) new Cliente());
-                    //thread.start();
-                    
-                  
                  
                     while(Cliente.Movimiento!=5){
                         
                         
                        if(Cliente.confChat == true)
                        {
-                           System.out.println("entro a la condicion del while");
                            chatRemoto.enviarMensaje(Cliente.esteUsuario);
                            Cliente.confChat = false;
                        }
@@ -252,8 +232,17 @@ public class Cliente extends JFrame implements ActionListener, Runnable {
                        else Cliente.Confirmar=false;
                        
                        
+                       if(Cliente.confChat == true)
+                       {
+                           chatRemoto.enviarMensaje(Cliente.esteUsuario);
+                           Cliente.confChat = false;
+                       }
+                       
                         TurnoActual=usuarioRemoto.getTurno();
-                        System.out.println("mi turno es: " + myTurno + " el turno Actual es: "+TurnoActual);
+                        //System.out.println("mi turno es: " + myTurno + " el turno Actual es: "+TurnoActual);
+                       System.out.print("");
+                       
+                       
                        
                         //Cliente.Confirmar=false;
                     //System.out.println("Aló "+ Cliente.Confirmar + " "+ Cliente.Movimiento);
@@ -284,9 +273,10 @@ catch (Exception e) {
         }
 
 }
-
     
-    public void run(){
+
+    @Override
+    public void run() {
         String mensaje = new String(); //String del mensaje entregado por el servidor
         Chat chatRemotoHebra; //Se crea un nuevo objeto llamado objetoRemoto
 
@@ -300,8 +290,6 @@ catch (Exception e) {
                 chatRemotoHebra = conexion.getChatServidor();
 
                 while (true) {
-                    
-                    
                     //Obtenemos el valor entregado por el servidor
                     String mensajeActual = chatRemotoHebra.recibirMensaje();
                     //De ser distinto al mensaje anterior, cambiamos el valor
@@ -322,5 +310,8 @@ catch (Exception e) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+   
+
 
 }
