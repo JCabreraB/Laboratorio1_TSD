@@ -9,6 +9,8 @@ import rmi_interface.Usuario;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import javax.swing.ImageIcon;
+import javax.swing.JTextField;
 import rmi.ConexionCliente;
 
 
@@ -26,37 +28,57 @@ public class Cliente extends JFrame implements ActionListener{
     public static String tableroRefRemota = "TableroRemoto";    // Nombre del objeto subido
     public static int Movimiento = 6;
     public static boolean Confirmar, Ready = false;   
-    public static JButton botonIzquierdo, botonDerecho, botonArriba, botonAbajo, botonTamTablero, botonReady;
+    public static JButton botonIzquierdo, botonDerecho, botonArriba, botonAbajo, botonTamTablero, botonReady, confirmarNombre;
     public static int MatrizUsuario [][] = new int [10][10];
+    public static JButton MatrizVisible [][] = new JButton [10][10];
+    public static JTextField Nombre;
+    public static String esteUsuario;
     
     public Cliente() {
         
         setLayout(null);
         botonIzquierdo = new JButton("Izquierda");
-        botonIzquierdo.setBounds(10, 40, 110, 30);
+        botonIzquierdo.setBounds(170, 600, 110, 30);
         add(botonIzquierdo);
         botonIzquierdo.addActionListener(this);
         botonDerecho = new JButton("Derecha");
-        botonDerecho.setBounds(230, 40, 110, 30);
+        botonDerecho.setBounds(390, 600, 110, 30);
         add(botonDerecho);
         botonDerecho.addActionListener(this);
         botonArriba = new JButton ("Arriba");
-        botonArriba.setBounds(120, 10, 110, 30);
+        botonArriba.setBounds(280, 570, 110, 30);
         add(botonArriba);
         botonArriba.addActionListener(this);
         botonAbajo =  new JButton ("Abajo");
-        botonAbajo.setBounds(120, 70, 110, 30);
+        botonAbajo.setBounds(280, 630, 110, 30);
         add(botonAbajo);
         botonAbajo.addActionListener(this);
         botonTamTablero = new JButton ("Confirmar");
-        botonTamTablero.setBounds(120, 40, 110, 30);
+        botonTamTablero.setBounds(280, 600, 110, 30);
         add(botonTamTablero);
         botonTamTablero.addActionListener(this);
         botonReady = new JButton ("Listo");
-        botonReady.setBounds(260, 100, 110, 30);
+        botonReady.setBounds(460, 660, 110, 30);
         add(botonReady);
         botonReady.addActionListener(this);
+        for(int i=0; i<10; i++){
+        for(int j=0; j<10; j++){
+        MatrizVisible[i][j] = new JButton("");
+        MatrizVisible[i][j].setBounds(50*i+70, 50*j+50, 50, 50);
+        add(MatrizVisible[i][j]);
+        }}
         
+     ///////Esto es lo nuevo/////
+        Nombre = new JTextField(20);
+        Nombre.addActionListener(this);        
+        Nombre.setBounds(20, 10, 110, 30);
+        add(Nombre);
+        
+        confirmarNombre =new JButton("Aceptar");
+        confirmarNombre.addActionListener(this);
+        confirmarNombre.setBounds(140, 10, 90, 30);
+        add(confirmarNombre);
+         ///////Esto es lo nuevo/////
         
         this.setTitle("Servidor BD1");
     }
@@ -78,24 +100,47 @@ public class Cliente extends JFrame implements ActionListener{
             Cliente.Confirmar=true;
         if( evt.getSource()==Cliente.botonReady )
             Cliente.Ready=true;
+             ///////Esto es lo nuevo/////
+        if( evt.getSource()==Cliente.confirmarNombre )
+            Cliente.esteUsuario = Cliente.Nombre.getText();
+             ///////Esto es lo nuevo/////
     }
     
     public static void mostrar (int[][] matriz){
+        
+        ImageIcon raton = new ImageIcon ("raton.jpeg");
+        ImageIcon trampa = new ImageIcon ("calavera.jpeg");
+        ImageIcon meta = new ImageIcon ("meta.jpeg");
         int i,j;
         for(i=0;i<10;i++){
             for(j=0;j<10;j++){
-                System.out.print(matriz[i][j]+" ");
+                
+                if(matriz[i][j]==1)
+                    MatrizVisible[j][i].setIcon(raton);
+                else if (matriz[i][j]==2)
+                    MatrizVisible[j][i].setIcon(trampa);
+                else if (matriz[i][j]==3)
+                    MatrizVisible[j][i].setIcon(meta);
+                else
+                    MatrizVisible[j][i].setIcon(null);
+                
+                    
+                //String tablero= Integer.toString(matriz[j][i]);
+                //MatrizVisible[i][j].setText(tablero);
+                System.out.print(matriz[j][i]);
             }
             System.out.println();
         }
     }
     
-   
 
     public static void main(String[] args) {
+        
         Cliente panel = new Cliente();
-        panel.setBounds(650, 350, 220, 100);
+        panel.setBounds(650, 250, 620, 740);
         panel.setVisible(true);
+        
+
         
         
         Usuario usuarioRemoto; //Se crea un nuevo objeto llamado objetoRemoto
@@ -122,21 +167,23 @@ public class Cliente extends JFrame implements ActionListener{
 
           
 
-                        System.out.println("Ingrese el nombre del usuario: ");
-                        Scanner sc = new Scanner(System.in);
-                        String usuario = sc.next();
+                        while(Cliente.esteUsuario==null){
+                            Thread.sleep(1000);
+                    }
 
                         //Llama a un método del objeto remoto, y se le ingresa un parámetro a éste método
+                        
+                        System.out.println(Cliente.esteUsuario);
 
-                        boolean ingreso = usuarioRemoto.ingresarUsuario(usuario);
+                        boolean ingreso = usuarioRemoto.ingresarUsuario(Cliente.esteUsuario);
 
                         if (ingreso) {
                             System.out.println("¡Felicitaciones, ha sido agregado el usuario!");
                         } else {
                             System.out.println("Lamentablemente no ha sido ingresado el usuario, pruebe con otro nombre...");
                         }
-
-                    
+                        
+                    Cliente.mostrar(tableroRemoto.getMatriz());
                         
                     int CantidadUsuarios = usuarioRemoto.verUsuarios().size();
                     int myTurno = usuarioRemoto.verUsuarios().size()-1;
@@ -157,7 +204,7 @@ public class Cliente extends JFrame implements ActionListener{
                         CantidadUsuarios=usuarioRemoto.verUsuarios().size();
                         CantidadListos=usuarioRemoto.getListos().size();
                         
-                        System.out.println("Cantidad de Usuarios: "+ CantidadUsuarios +" Cantidad de Listos: "+CantidadListos );
+                       // System.out.println("Cantidad de Usuarios: "+ CantidadUsuarios +" Cantidad de Listos: "+CantidadListos );
                         
                         if(Ready==true && Cuenta!=1){
                         usuarioRemoto.registrarListos(Ready);
@@ -189,16 +236,20 @@ public class Cliente extends JFrame implements ActionListener{
                                  Cliente.Confirmar=false;}
                          else System.out.println("Aló");
                          
+                         
                          usuarioRemoto.entregarTurno();
-                         Cliente.mostrar(tableroRemoto.getMatriz());
+                         
                          
                        
                        }
                        else Cliente.Confirmar=false;
                        
+                       if(tableroRemoto.getCondicion()){
+                         Cliente.mostrar(tableroRemoto.getMatriz());
+                         tableroRemoto.cambiarCondicion();}
                        
                         TurnoActual=usuarioRemoto.getTurno();
-                        System.out.println("mi turno es: " + myTurno + " el turno Actual es: "+TurnoActual);
+                        //System.out.println("mi turno es: " + myTurno + " el turno Actual es: "+TurnoActual);
                        
                         //Cliente.Confirmar=false;
                     //System.out.println("Aló "+ Cliente.Confirmar + " "+ Cliente.Movimiento);
