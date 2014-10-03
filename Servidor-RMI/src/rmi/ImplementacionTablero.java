@@ -5,7 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import static rmi.ImplementacionUsuario.logger;
 import rmi_interface.Tablero;
 
 /**
@@ -20,7 +20,6 @@ public class ImplementacionTablero extends UnicastRemoteObject implements Tabler
     static int MatrizTablero[][] = new int [10][10];
     static int PosX;
     static int PosY;
-    static boolean Semovio = false;
     
     static Logger logger;
 
@@ -83,7 +82,6 @@ public class ImplementacionTablero extends UnicastRemoteObject implements Tabler
         else System.out.println("Movimiento imposible");
         
         ImplementacionTablero.MatrizTablero[i][j] =1 ;
-        ImplementacionTablero.Semovio=true;
         
         System.out.println("La pieza se encuentra en la posicion ["+ i + "][" + j + "]");
     
@@ -91,7 +89,7 @@ public class ImplementacionTablero extends UnicastRemoteObject implements Tabler
     @Override
     public void PonerTrampas (){
     
-        int Trampas = 10;
+        int Trampas = 20;
         Random rnd = new Random();
         
         while(Trampas!=0){
@@ -119,14 +117,4 @@ public class ImplementacionTablero extends UnicastRemoteObject implements Tabler
     @Override
     public int[][] getMatriz() throws RemoteException{
     return ImplementacionTablero.MatrizTablero;}
-    
-    @Override
-    public boolean getCondicion() throws RemoteException{
-    return ImplementacionTablero.Semovio;
-    }
-    
-    @Override
-    public void cambiarCondicion () throws RemoteException{    
-    ImplementacionTablero.Semovio=false;
-    }
 }

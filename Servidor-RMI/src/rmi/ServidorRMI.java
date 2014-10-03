@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import static rmi.ImplementacionUsuario.logger;
 import rmi_interface.Tablero;
 import rmi_interface.Usuario;
+import rmi_interface.Chat;
 
 /**
  *
@@ -68,6 +69,11 @@ public class ServidorRMI {
                 logger.log(Level.INFO, "Se agregara ".concat(nombre).concat(" con el objecto Tablero"));
                 registro.rebind(nombre, (Tablero) objeto);
             }
+            else if (objeto.getClass().equals(ImplementacionChat.class)){
+                logger.log(Level.INFO, "Se agregara ".concat(nombre).concat(" con el objecto Chat"));
+                registro.rebind(nombre, (Chat) objeto);
+            }
+            
             
             //Nota: Esto también se podría realizar de otra manera, debido que 
             //se podrían implementar dos interfaces a la misma implementación.

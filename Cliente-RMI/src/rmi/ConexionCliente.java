@@ -6,6 +6,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import rmi_interface.Tablero;
 import rmi_interface.Usuario;
+import rmi_interface.Chat;
 
 /**
  *
@@ -26,6 +27,7 @@ public class ConexionCliente {
 
     private Usuario usuario; //Interface necesaria para la comunición con el objecto Usuario del servidor
     private Tablero tablero; //Interface necesaria para la comunición con el objecto Tablero del servidor
+    private Chat chat; //Interface necesaria para la comunición con el objecto Tablero del servidor
 
     private Interface servidor; //Interface necesaria para la comunición con el objecto del servidor
 
@@ -36,6 +38,7 @@ public class ConexionCliente {
 
         this.usuario = null;
         this.tablero = null;
+        this.chat = null;
 
         this.servidor = null;
 
@@ -72,6 +75,8 @@ public class ConexionCliente {
                 usuario = (Usuario) registry.lookup(nombreObjetoRemoto);
             } else if (nombreObjetoRemoto.equals("TableroRemoto")) {
                 tablero = (Tablero) registry.lookup(nombreObjetoRemoto);
+            } else if (nombreObjetoRemoto.equals("ChatRemoto")) {
+                chat = (Chat) registry.lookup(nombreObjetoRemoto);
             }
 
             this.conectado = true;
@@ -125,6 +130,15 @@ public class ConexionCliente {
     public void setUsuarioServidor(Tablero tablero) {
         this.tablero = tablero;
     }
+    
+    public Chat getChatServidor() {
+        return chat;
+    }
+
+    public void setChatServidor(Chat chat) {
+        this.chat = chat;
+    }
+    
     public Interface getServidor() {
         return servidor;
     }
