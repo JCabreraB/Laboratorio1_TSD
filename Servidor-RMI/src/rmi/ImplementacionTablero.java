@@ -5,7 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static rmi.ImplementacionUsuario.logger;
+
 import rmi_interface.Tablero;
 
 /**
@@ -20,6 +20,11 @@ public class ImplementacionTablero extends UnicastRemoteObject implements Tabler
     static int MatrizTablero[][] = new int [10][10];
     static int PosX;
     static int PosY;
+    static boolean Semovio, Termino = false;
+    static int Puntaje;
+    static int Mensaje;
+    
+    
     
     static Logger logger;
 
@@ -31,6 +36,9 @@ public class ImplementacionTablero extends UnicastRemoteObject implements Tabler
         PosY = 0;
         MatrizTablero[0][0] = 1;
         MatrizTablero[9][9] = 3;
+        Puntaje=1000;
+        Mensaje=0;
+        
     }
 
     /*
@@ -81,15 +89,54 @@ public class ImplementacionTablero extends UnicastRemoteObject implements Tabler
         else if(Lado==3 && i!=9) i = i+1; 
         else System.out.println("Movimiento imposible");
         
+        verificarPocision(i,j);
+        
         ImplementacionTablero.MatrizTablero[i][j] =1 ;
+        ImplementacionTablero.Semovio=true;
+        
+        
         
         System.out.println("La pieza se encuentra en la posicion ["+ i + "][" + j + "]");
     
     }
+    
+    @Override
+    public void verificarPocision(int x, int y) throws RemoteException{
+    
+        if(ImplementacionTablero.MatrizTablero[x][y]==2){
+            ImplementacionTablero.Puntaje = ImplementacionTablero.Puntaje - 100;
+            ImplementacionTablero.Mensaje=-1;
+            }
+        
+        else if(ImplementacionTablero.MatrizTablero[x][y]==3){
+            ImplementacionTablero.Termino = true;
+            ImplementacionTablero.Mensaje=1;}
+        else 
+            ImplementacionTablero.Puntaje = ImplementacionTablero.Puntaje - 5;
+        
+        
+           
+    }
+    
+    @Override
+    public int MensajeJuego() throws RemoteException{
+    return ImplementacionTablero.Mensaje;
+    }
+    
+    @Override
+    public boolean verEstado() throws RemoteException{
+    return ImplementacionTablero.Termino;
+    }
+    
+    @Override
+    public int Puntaje() throws RemoteException{
+    return ImplementacionTablero.Puntaje;
+    }
+        
     @Override
     public void PonerTrampas (){
     
-        int Trampas = 20;
+        int Trampas = 10;
         Random rnd = new Random();
         
         while(Trampas!=0){
@@ -114,7 +161,18 @@ public class ImplementacionTablero extends UnicastRemoteObject implements Tabler
         }
     }
 
+    
     @Override
     public int[][] getMatriz() throws RemoteException{
     return ImplementacionTablero.MatrizTablero;}
+    
+    @Override
+    public boolean getCondicion() throws RemoteException{
+    return ImplementacionTablero.Semovio;
+    }
+    
+    @Override
+    public void cambiarCondicion () throws RemoteException{    
+    ImplementacionTablero.Semovio=false;
+    }
 }

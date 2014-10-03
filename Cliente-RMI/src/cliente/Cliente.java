@@ -2,19 +2,14 @@ package cliente;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JTextArea;
 import rmi_interface.Tablero;
 import rmi_interface.Usuario;
-import rmi_interface.Chat;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import rmi.ConexionCliente;
 
@@ -25,49 +20,55 @@ import rmi.ConexionCliente;
  * @title Taller de sistemas distribuidos - Clase 1
  */
 
-public class Cliente extends JFrame implements ActionListener, Runnable{
+public class Cliente extends JFrame implements ActionListener{
 
     public static int Puerto = 2014;                                 //Número del puerto que está alojado el servidor
     public static String IPServer = "localhost";                      //Dirección IP del servidor, la cual podría utilizarse por defecto el localhost
     public static String usuarioRefRemoto = "UsuarioRemoto";    // Nombre del objeto subido
     public static String tableroRefRemota = "TableroRemoto";    // Nombre del objeto subido
-    public static String chatRefRemota = "ChatRemoto";    // Nombre del objeto subido
     public static int Movimiento = 6;
-    public static boolean Confirmar, Ready, confChat = false;
+    public static boolean Confirmar, Ready = false;   
     public static JButton botonIzquierdo, botonDerecho, botonArriba, botonAbajo, botonTamTablero, botonReady, confirmarNombre;
     public static int MatrizUsuario [][] = new int [10][10];
+    public static JButton MatrizVisible [][] = new JButton [10][10];
     public static JTextField Nombre;
     public static String esteUsuario;
-    public static Thread thread; 
     
     public Cliente() {
         
         setLayout(null);
         botonIzquierdo = new JButton("Izquierda");
-        botonIzquierdo.setBounds(10, 40, 110, 30);
+        botonIzquierdo.setBounds(170, 600, 110, 30);
         add(botonIzquierdo);
         botonIzquierdo.addActionListener(this);
         botonDerecho = new JButton("Derecha");
-        botonDerecho.setBounds(230, 40, 110, 30);
+        botonDerecho.setBounds(390, 600, 110, 30);
         add(botonDerecho);
         botonDerecho.addActionListener(this);
         botonArriba = new JButton ("Arriba");
-        botonArriba.setBounds(120, 10, 110, 30);
+        botonArriba.setBounds(280, 570, 110, 30);
         add(botonArriba);
         botonArriba.addActionListener(this);
         botonAbajo =  new JButton ("Abajo");
-        botonAbajo.setBounds(120, 70, 110, 30);
+        botonAbajo.setBounds(280, 630, 110, 30);
         add(botonAbajo);
         botonAbajo.addActionListener(this);
         botonTamTablero = new JButton ("Confirmar");
-        botonTamTablero.setBounds(120, 40, 110, 30);
+        botonTamTablero.setBounds(280, 600, 110, 30);
         add(botonTamTablero);
         botonTamTablero.addActionListener(this);
         botonReady = new JButton ("Listo");
-        botonReady.setBounds(260, 100, 110, 30);
+        botonReady.setBounds(460, 660, 110, 30);
         add(botonReady);
         botonReady.addActionListener(this);
+        for(int i=0; i<10; i++){
+        for(int j=0; j<10; j++){
+        MatrizVisible[i][j] = new JButton("");
+        MatrizVisible[i][j].setBounds(50*i+70, 50*j+50, 50, 50);
+        add(MatrizVisible[i][j]);
+        }}
         
+     ///////Esto es lo nuevo/////
         Nombre = new JTextField(20);
         Nombre.addActionListener(this);        
         Nombre.setBounds(20, 10, 110, 30);
@@ -75,17 +76,14 @@ public class Cliente extends JFrame implements ActionListener, Runnable{
         
         confirmarNombre =new JButton("Aceptar");
         confirmarNombre.addActionListener(this);
-        confirmarNombre.setBounds(220, 10, 90, 30);
+        confirmarNombre.setBounds(140, 10, 90, 30);
         add(confirmarNombre);
-        
-        
+         ///////Esto es lo nuevo/////
         
         this.setTitle("Servidor BD1");
-        Thread t= new Thread(this);
-        t.start();
     }
     
-    @Override
+     @Override
     public void actionPerformed(ActionEvent evt) {
         
     
@@ -102,69 +100,87 @@ public class Cliente extends JFrame implements ActionListener, Runnable{
             Cliente.Confirmar=true;
         if( evt.getSource()==Cliente.botonReady )
             Cliente.Ready=true;
+             ///////Esto es lo nuevo/////
         if( evt.getSource()==Cliente.confirmarNombre )
-        {     
             Cliente.esteUsuario = Cliente.Nombre.getText();
-            Cliente.confChat = true;
-        }
+             ///////Esto es lo nuevo/////
     }
     
     public static void mostrar (int[][] matriz){
+        
+        ImageIcon raton = new ImageIcon ("raton.jpeg");
+        ImageIcon trampa = new ImageIcon ("calavera.jpeg");
+        ImageIcon meta = new ImageIcon ("meta.jpeg");
         int i,j;
         for(i=0;i<10;i++){
             for(j=0;j<10;j++){
-                System.out.print(matriz[i][j]+" ");
+                
+                if(matriz[i][j]==1)
+                    MatrizVisible[j][i].setIcon(raton);
+                else if (matriz[i][j]==2)
+                    MatrizVisible[j][i].setIcon(trampa);
+                else if (matriz[i][j]==3)
+                    MatrizVisible[j][i].setIcon(meta);
+                else
+                    MatrizVisible[j][i].setIcon(null);
+                
+                System.out.print(matriz[j][i]);
             }
             System.out.println();
         }
     }
     
-   
 
     public static void main(String[] args) {
+        
         Cliente panel = new Cliente();
-        panel.setBounds(650, 350, 220, 100);
+        panel.setBounds(650, 250, 620, 740);
         panel.setVisible(true);
         
+
         
         
         Usuario usuarioRemoto; //Se crea un nuevo objeto llamado objetoRemoto
         Tablero tableroRemoto;  //Se crea un nuevo objeto llamado tableroRemoto
-        Chat chatRemoto;  //Se crea un nuevo objeto llamado chatRemoto
+        
 
         //Se instancia el objeto que conecta con el servidor
         ConexionCliente conexion = new ConexionCliente();
         try {
             //Se conecta con el servidor
 
-            if (conexion.iniciarRegistro(IPServer, Puerto, usuarioRefRemoto) && conexion.iniciarRegistro(IPServer, Puerto, tableroRefRemota) && conexion.iniciarRegistro(IPServer, Puerto, chatRefRemota)) {
+            if (conexion.iniciarRegistro(IPServer, Puerto, usuarioRefRemoto) && conexion.iniciarRegistro(IPServer, Puerto, tableroRefRemota)) {
 
                 //Se obtiene la referencia al objeto remoto
                 usuarioRemoto = conexion.getUsuarioServidor();
                 tableroRemoto = conexion.getTableroServidor();
-                chatRemoto = conexion.getChatServidor();
                 int opcion=0;
                 
                 tableroRemoto.PonerTrampas();
 
                 
-                while (opcion != 5) {                    
+                while (opcion != 5) {
+                    
 
-                        System.out.println("Ingrese el nombre del usuario: ");
-                        Scanner sc = new Scanner(System.in);
-                        String usuario = sc.next();
+          
+
+                        while(Cliente.esteUsuario==null){
+                            Thread.sleep(1000);
+                    }
 
                         //Llama a un método del objeto remoto, y se le ingresa un parámetro a éste método
+                        
+                        System.out.println(Cliente.esteUsuario);
 
-                        boolean ingreso = usuarioRemoto.ingresarUsuario(usuario);
+                        boolean ingreso = usuarioRemoto.ingresarUsuario(Cliente.esteUsuario);
 
                         if (ingreso) {
                             System.out.println("¡Felicitaciones, ha sido agregado el usuario!");
                         } else {
                             System.out.println("Lamentablemente no ha sido ingresado el usuario, pruebe con otro nombre...");
                         }
-
-                    
+                        
+                    Cliente.mostrar(tableroRemoto.getMatriz());
                         
                     int CantidadUsuarios = usuarioRemoto.verUsuarios().size();
                     int myTurno = usuarioRemoto.verUsuarios().size()-1;
@@ -185,8 +201,7 @@ public class Cliente extends JFrame implements ActionListener, Runnable{
                         CantidadUsuarios=usuarioRemoto.verUsuarios().size();
                         CantidadListos=usuarioRemoto.getListos().size();
                         
-                        //System.out.println("Cantidad de Usuarios: "+ CantidadUsuarios +" Cantidad de Listos: "+CantidadListos );
-                        System.out.print("");
+                       // System.out.println("Cantidad de Usuarios: "+ CantidadUsuarios +" Cantidad de Listos: "+CantidadListos );
                         
                         if(Ready==true && Cuenta!=1){
                         usuarioRemoto.registrarListos(Ready);
@@ -197,14 +212,8 @@ public class Cliente extends JFrame implements ActionListener, Runnable{
                     
                  
                     while(Cliente.Movimiento!=5){
-                        
-                        
-                       if(Cliente.confChat == true)
-                       {
-                           chatRemoto.enviarMensaje(Cliente.esteUsuario);
-                           Cliente.confChat = false;
-                       }
-    
+                       
+                       
                        if(Cliente.Confirmar==true && TurnoActual == myTurno){
                            
                             //System.out.println("Aló");
@@ -224,25 +233,37 @@ public class Cliente extends JFrame implements ActionListener, Runnable{
                                  Cliente.Confirmar=false;}
                          else System.out.println("Aló");
                          
+                         
                          usuarioRemoto.entregarTurno();
-                         Cliente.mostrar(tableroRemoto.getMatriz());
+                         
                          
                        
                        }
                        else Cliente.Confirmar=false;
                        
+                       if(tableroRemoto.getCondicion()){
+                         Cliente.mostrar(tableroRemoto.getMatriz());                         
+                         tableroRemoto.cambiarCondicion();
                        
-                       if(Cliente.confChat == true)
-                       {
-                           chatRemoto.enviarMensaje(Cliente.esteUsuario);
-                           Cliente.confChat = false;
+                         if(!tableroRemoto.verEstado()){
+                             
+                            int MensajeDelServidor = tableroRemoto.MensajeJuego();
+                            int PuntajeGlobal = tableroRemoto.Puntaje();
+                            
+                            if(MensajeDelServidor == -1)
+                                System.out.println("Han caido en una trampa se restarán 100 puntos. Su puntacion es: "+PuntajeGlobal);
+                            else if(MensajeDelServidor == 1)
+                                System.out.println("Felicitaciones Terminaron el juego. La Puntuacion Final es: "+ PuntajeGlobal);
+                            else
+                                System.out.println("Su puntacion es: "+PuntajeGlobal);
+                                    
+                        }
+                        else
+                            opcion = 5;
                        }
                        
                         TurnoActual=usuarioRemoto.getTurno();
                         //System.out.println("mi turno es: " + myTurno + " el turno Actual es: "+TurnoActual);
-                       System.out.print("");
-                       
-                       
                        
                         //Cliente.Confirmar=false;
                     //System.out.println("Aló "+ Cliente.Confirmar + " "+ Cliente.Movimiento);
@@ -273,45 +294,4 @@ catch (Exception e) {
         }
 
 }
-    
-
-    @Override
-    public void run() {
-        String mensaje = new String(); //String del mensaje entregado por el servidor
-        Chat chatRemotoHebra; //Se crea un nuevo objeto llamado objetoRemoto
-
-        //Se instancia el objeto que conecta con el servidor
-        ConexionCliente conexion = new ConexionCliente();
-        try {
-            //Se conecta con el servidor
-            if (conexion.iniciarRegistro(IPServer, Puerto, chatRefRemota)) {
-
-                //Se obtiene la referencia al objeto remoto
-                chatRemotoHebra = conexion.getChatServidor();
-
-                while (true) {
-                    //Obtenemos el valor entregado por el servidor
-                    String mensajeActual = chatRemotoHebra.recibirMensaje();
-                    //De ser distinto al mensaje anterior, cambiamos el valor
-                    //del mensaje nuevo y lo imprimimos
-                    if(!mensajeActual.equals(mensaje)){
-                        mensaje = mensajeActual;                                
-                        System.out.println(mensaje);
-                    }
-                    //La hebra se deja dormida 1 segundo, por lo tanto,
-                    //cada 1 segundo estará consulta al servidor si existe
-                    //un nuevo mensaje que entregar
-                    Thread.sleep(1000);
-                }
-            }
-        } catch (RemoteException | InterruptedException e) {
-            System.out.println("Ha ocurrido un error..." + e);
-        } catch (NotBoundException ex) {
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-   
-
-
 }

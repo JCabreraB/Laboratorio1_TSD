@@ -3,7 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/yarick/Descargas/TSD_LAbRMI%20Chat%20v2/Cliente-RMI/src/cliente/Cliente.java</file>
+            <file>file:/home/xeerruck/TSD_LAbRMI/Cliente-RMI/src/rmi_interface/Usuario.java</file>
+            <file>file:/home/xeerruck/TSD_LAbRMI/Cliente-RMI/src/cliente/Cliente.java</file>
+            <file>file:/home/xeerruck/TSD_LAbRMI/Cliente-RMI/src/rmi_interface/Tablero.java</file>
+            <file>file:/home/xeerruck/TSD_LAbRMI/Cliente-RMI/src/rmi_interface/Interface.java</file>
         </group>
     </open-files>
 </project-private>

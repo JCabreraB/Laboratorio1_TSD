@@ -19,4 +19,10 @@ public interface Tablero extends Remote {
     public void MoverPieza(int Lado) throws RemoteException;
     public void PonerTrampas() throws RemoteException;
     public int[][] getMatriz() throws RemoteException;
+    public void cambiarCondicion () throws RemoteException;
+    public boolean getCondicion() throws RemoteException;
+    public void verificarPocision(int x, int y) throws RemoteException;
+    public boolean verEstado() throws RemoteException;
+    public int Puntaje() throws RemoteException;
+    public int MensajeJuego() throws RemoteException;
 }
